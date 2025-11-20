@@ -2,16 +2,16 @@ pipeline {
     agent any
     
     environment {
-        AWS_REGION = 'us-east-1'  // Change if different
-        ECR_REPO = '123456789.dkr.ecr.us-east-1.amazonaws.com/my-web-app'  // Your ECR URI
-        EC2_HOST = 'YOUR_EC2_PUBLIC_IP'  // Your EC2 IP
+        AWS_REGION = 'ap-south-1'  // Change if different
+        ECR_REPO = '253985439142.dkr.ecr.ap-south-1.amazonaws.com/my-web-app'  // Your ECR URI
+        EC2_HOST = '13.233.130.114'  // Your EC2 IP
         IMAGE_TAG = "${BUILD_NUMBER}"
     }
     
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/YOUR_USERNAME/my-cicd-project.git'
+                git branch: 'main', url: 'https://github.com/Sindanika/my-cicd-project.git'
             }
         }
         
