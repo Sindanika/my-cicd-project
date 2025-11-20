@@ -19,7 +19,7 @@ pipeline {
             steps {
                 script {
                     echo 'Building application...'
-                    bat 'npm install'  // Use 'bat' for Windows
+                    sh 'npm install'
                 }
             }
         }
@@ -28,7 +28,7 @@ pipeline {
             steps {
                 script {
                     echo 'Running tests...'
-                    bat 'npm test'
+                    sh 'npm test'
                 }
             }
         }
@@ -37,8 +37,8 @@ pipeline {
             steps {
                 script {
                     echo 'Building Docker image...'
-                    bat "docker build -t ${ECR_REPO}:${IMAGE_TAG} ."
-                    bat "docker tag ${ECR_REPO}:${IMAGE_TAG} ${ECR_REPO}:latest"
+                    sh "docker build -t ${ECR_REPO}:${IMAGE_TAG} ."
+                    sh "docker tag ${ECR_REPO}:${IMAGE_TAG} ${ECR_REPO}:latest"
                 }
             }
         }
@@ -50,7 +50,7 @@ pipeline {
                         string(credentialsId: 'aws-access-key-id', variable: 'AWS_ACCESS_KEY_ID'),
                         string(credentialsId: 'aws-secret-access-key', variable: 'AWS_SECRET_ACCESS_KEY')
                     ]) {
-                        bat """
+                        sh """
                             aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${ECR_REPO}
                             docker push ${ECR_REPO}:${IMAGE_TAG}
                             docker push ${ECR_REPO}:latest
@@ -64,7 +64,7 @@ pipeline {
             steps {
                 script {
                     sshagent(['ec2-ssh-key']) {
-                        bat """
+                        sh """
                             ssh -o StrictHostKeyChecking=no ec2-user@${EC2_HOST} "
                                 aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${ECR_REPO}
                                 docker pull ${ECR_REPO}:latest
